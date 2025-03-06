@@ -1,69 +1,115 @@
-// Authored by : BaaaaaaaaaaarkingDog
-// Co-authored by : -
-// http://boj.kr/e93d3fd7a3bc43179af06505c3f524b0
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <deque>
+#include <string>
+#include <algorithm>
+
 using namespace std;
 
-void parse(string& tmp, deque<int>& d){
-  int cur = 0;
-  for(int i = 1; i+1 < tmp.size(); i++)
-  {
-    if(tmp[i] == ','){
-      d.push_back(cur);
-      cur = 0;
-    }
-    else{
-      cur = 10 * cur + (tmp[i] - '0');
-    }
-  }
-  if(cur != 0)
-    d.push_back(cur);
+deque<int> DQ;
+int testCase;
+string procedure;
+int n;
+string inputArr;
+int rev;
+int errorFlag;
+
+void pushDQ(string& tmp, deque<int>& dq)
+{
+	int cur = 0;
+
+	for (int i = 1; i + 1 < tmp.size(); ++i)
+	{
+		if (tmp[i] == ',')
+		{
+			dq.push_back(cur);
+			cur = 0;
+		}
+		else
+		{
+			// 10 * cur : 한 자리 수 이상을 받기 위한 연산, '0' == 48
+			cur = 10 * cur + (tmp[i] - 48);
+		}
+	}
+
+	// 배열의 마지막 숫자 뒤에는 ,가 붙지 않음.
+	if (cur != 0)
+	{
+		dq.push_back(cur);
+	}
 }
 
-void print_result(deque<int>& d){
-  cout << '[';
-  for(int i = 0; i < d.size(); i++)
-  {
-    cout << d[i];
-    if(i+1 != d.size())
-      cout << ',';
-  }
-  cout << "]\n";
+void printResult(deque<int>& dq)
+{
+	cout << '[';
+
+	for (int i = 0; i < dq.size(); ++i)
+	{
+		cout << dq[i];
+
+		if (i + 1 != dq.size())
+			cout << ',';
+	}
+
+	cout << "]\n";
 }
 
-int t;
-int main(){
-  ios::sync_with_stdio(0);
-  cin.tie(0);
-  cin >> t;
-  while(t--){
-    deque<int> d;
-    int rev = 0;
-    int n;
-    bool isWrong = false;
-    string query, tmp;
-    cin >> query;
-    cin >> n;
-    cin >> tmp;
-    parse(tmp, d);
-    for(char c : query)
-    {
-      if(c == 'R')
-        rev = 1 - rev;
-      else{
-        if(d.empty()){
-          isWrong = true;
-          break;
-        }
-        if(!rev) d.pop_front();
-        else d.pop_back();
-      }
-    }
-    if(isWrong)
-      cout << "error\n";
-    else{
-      if(rev) reverse(d.begin(), d.end());
-      print_result(d);
-    }
-  }
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+
+	cin >> testCase;
+	while (testCase--)
+	{
+		errorFlag = 0;
+		rev = 0;
+		DQ.clear();
+		cin >> procedure >> n;
+		cin >> inputArr;
+
+		pushDQ(inputArr, DQ);
+
+		for (char c : procedure)
+		{
+			if (c == 'R')
+			{
+				rev = 1 - rev;
+			}
+			else
+			{
+				if (DQ.empty())
+				{
+					errorFlag = 1;
+					break;
+				}
+
+				if (rev)
+				{
+					DQ.pop_back();
+				}
+				else
+				{
+					DQ.pop_front();
+				}
+				
+			}
+		}
+
+		if (errorFlag == 1)
+		{
+			cout << "error\n";
+		}
+		else
+		{
+			if (rev)
+			{
+				reverse(DQ.begin(), DQ.end());
+			}
+
+			printResult(DQ);
+		}
+	}
+
+	return 0;
 }
