@@ -2,7 +2,7 @@
 using namespace std;
 
 int N, M, temp, i, j;
-long S[100001];
+int S[100001];
 
 int main()
 {
@@ -11,16 +11,16 @@ int main()
     
     cin >> N >> M;
     
-    for(int t = 1; t <= N; ++t)
+    for(int k = 1; k <= N; ++k)
     {
         cin >> temp;
-        S[t] = S[t - 1] + temp;
+        S[k] = S[k - 1] + temp;
     }
     
-    for(int t = 1; t <= M; ++t)
+    for(int k = 0; k < M; ++k)
     {
         cin >> i >> j;
-        cout << S[j] - S[i-1] << '\n';
+        cout << S[j] - S[i - 1] <<  '\n';
     }
     
     return 0;
